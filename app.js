@@ -258,7 +258,7 @@ const CH = [
   { at: .935, title: 'Your yard, <em>finished.</em>', sub: 'That one is a Coastal Edge pool deck in Pinellas. Every photo below is a real job.', layer: null },
 ];
 let fTarget = 0, fShown = -1, fChapter = -1, fLayout = null, watching = null;
-window.__ce = { film: () => ({ target: fTarget, shown: fShown, chapter: fChapter, pavers: heroJob.list.length }) };
+window.__ce = { film: () => ({ target: fTarget, shown: fShown, chapter: fChapter, pavers: heroJob.list.length }), ba: () => baPos };
 function filmLayout() { fLayout = NARROW() ? { cx: .5, cy: .42, w: .9, h: .55 } : { cx: .66, cy: .5, w: .5, h: .72 }; }
 function seg(p, a, b) { return clamp((p - a) / (b - a), 0, 1); }
 function drawFilm(p) {
@@ -308,7 +308,7 @@ onScroll();
 $('#watch').addEventListener('click', () => {
   const top = film.offsetTop, end = top + film.offsetHeight - innerHeight, t0 = performance.now(), D = REDUCED ? 10 : 11000;
   cancelWatch();
-  const step = now => { const t = clamp((now - t0) / D, 0, 1); scrollTo(0, lerp(top, end, easeIO(t))); if (t < 1 && watching) watching = requestAnimationFrame(step); else watching = null; };
+  const step = now => { const t = clamp((now - t0) / D, 0, 1); scrollTo({ top: lerp(top, end, easeIO(t)), behavior: 'instant' }); /* the page's CSS smooth-scroll would otherwise restart every frame and go nowhere */ if (t < 1 && watching) watching = requestAnimationFrame(step); else watching = null; };
   watching = requestAnimationFrame(step);
 });
 function cancelWatch() { if (watching) { cancelAnimationFrame(watching); watching = null; } }
